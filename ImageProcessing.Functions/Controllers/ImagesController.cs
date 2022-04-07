@@ -20,9 +20,8 @@ namespace ImageProcessing.Functions.Controllers
         }
 
         [HttpPost]
-        [Route("Profile")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Profile(IFormFile? img)
+        [Route("ImageUpload")]
+        public async Task<IActionResult> ImageUpload(IFormFile? img)
         {
             if (img != null)
                 await UploadFile(img, 300, 300);
