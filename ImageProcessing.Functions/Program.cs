@@ -4,7 +4,15 @@ using ImageProcessing.Functions.Services.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<IBlobsManagement, BlobsManagement>();
+builder.Services.AddScoped<IBlobsManagement>(_ =>
+{
+    var connBlobs = builder.Configuration.GetConnectionString("StorageImages");
+    if (connBlobs == null)
+        throw new ArgumentException(nameof(connBlobs));
+
+    return new BlobsManagement(connBlobs);
+});
+
 builder.Services.AddScoped<IQueuesManagement, QueuesManagement>();
 
 builder.Services.AddControllers();

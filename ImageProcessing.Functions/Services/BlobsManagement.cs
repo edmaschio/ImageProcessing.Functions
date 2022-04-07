@@ -5,12 +5,18 @@ namespace ImageProcessing.Functions.Services
 {
     public class BlobsManagement : IBlobsManagement
     {
-        public async Task<string> UploadFile(string containerName, string fileName, byte[] file, string connectionString)
+        private readonly string _connectionString;
+        public BlobsManagement(string connectionString)
+        {
+            _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+        }
+
+        public async Task<string> UploadFile(string containerName, string fileName, byte[] file)
         {
             try
             {
                 // Get reference to a container and then create it
-                var container = new BlobContainerClient(connectionString, containerName);
+                var container = new BlobContainerClient(_connectionString, containerName);
                 await container.CreateIfNotExistsAsync();
                 await container.SetAccessPolicyAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
 
