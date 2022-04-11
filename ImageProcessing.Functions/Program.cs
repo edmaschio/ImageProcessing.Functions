@@ -7,13 +7,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IBlobsManagement>(_ =>
 {
     var connBlobs = builder.Configuration.GetConnectionString("StorageImages");
-    if (connBlobs == null)
+    if (string.IsNullOrWhiteSpace(connBlobs))
         throw new ArgumentException(nameof(connBlobs));
 
     return new BlobsManagement(connBlobs);
 });
 
-builder.Services.AddScoped<IQueuesManagement, QueuesManagement>();
+builder.Services.AddScoped<IQueuesManagement>(_ =>
+{
+    var connQueues = builder.Configuration.GetConnectionString("ServiceBusImages");
+    if (string.IsNullOrWhiteSpace(connQueues))
+        throw new ArgumentException(nameof(connQueues));
+
+    return new QueuesManagement(connQueues);
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

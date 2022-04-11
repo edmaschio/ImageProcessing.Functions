@@ -6,12 +6,18 @@ namespace ImageProcessing.Functions.Services
 {
     public class QueuesManagement : IQueuesManagement
     {
-        public async Task<bool> SendMessageAsync<T>(T serviceMessage, string queueName, string connectionString)
+        private readonly string _queueConnString;
+        public QueuesManagement(string queueConnectionString)
+        {
+            _queueConnString = queueConnectionString ?? throw new ArgumentNullException(nameof(queueConnectionString));
+        }
+
+        public async Task<bool> SendMessageAsync<T>(T serviceMessage, string queueName)
         {
             try
             {
                 // Create a queue client
-                await using var client = new ServiceBusClient(connectionString);
+                await using var client = new ServiceBusClient(_queueConnString);
 
                 ServiceBusSender sender = client.CreateSender(queueName);
 

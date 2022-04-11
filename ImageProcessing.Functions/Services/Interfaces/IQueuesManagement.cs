@@ -2,5 +2,5 @@
 
 public interface IQueuesManagement
 {
-    Task<bool> SendMessageAsync<T>(T serviceMessage, string queueName, string connectionString);
+    Task<bool> SendMessageAsync<T>(T serviceMessage, string queueName);
 }
